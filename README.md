@@ -8,7 +8,7 @@ the relevant paths below `$HOME`.
 
 - Sway with six persistent workspaces and a subtle focused border
 - Waybar with system, network, VPN, Bluetooth, audio, battery, and agent usage indicators
-- Foot terminal and Fuzzel launcher
+- Foot terminal, Fuzzel launcher, and Starship Bash prompt
 - Mako notifications
 - Swaylock and Swayidle
 - Grim, Slurp, Swappy, and wl-clipboard for annotated screenshots
@@ -35,7 +35,7 @@ NetworkManager connection profiles, keyrings, caches, and runtime usage data.
 The setup uses these Ubuntu packages or equivalent tools:
 
 ```text
-sway waybar foot fuzzel mako swayidle swaylock
+sway waybar foot fuzzel starship mako swayidle swaylock
 brightnessctl power-profiles-daemon playerctl
 grim slurp swappy wl-clipboard
 python3-gi gir1.2-gtk-4.0 jq
