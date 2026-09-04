@@ -6,7 +6,21 @@
 
     "modules-left": ["custom/power", "sway/workspaces"],
     "modules-center": ["clock"],
-    "modules-right": ["custom/agents", "cpu", "memory", "disk", "pulseaudio", "sway/language", "custom/bluetooth", "custom/network", "custom/openvpn", "battery"],
+    "modules-right": ["group/hidden-status", "custom/agents", "cpu", "memory", "pulseaudio", "sway/language", "custom/network", "battery"],
+
+    "group/hidden-status": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 250,
+            "transition-left-to-right": true
+        },
+        "modules": ["custom/status-expander", "disk", "custom/bluetooth", "custom/openvpn"]
+    },
+
+    "custom/status-expander": {
+        "format": "",
+        "tooltip-format": "More status indicators"
+    },
 
     "sway/workspaces": {
         "disable-scroll": true,

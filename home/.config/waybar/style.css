@@ -66,12 +66,24 @@ window#waybar {
 #memory,
 #disk,
 #language,
+#custom-status-expander,
 #custom-bluetooth,
 #custom-openvpn,
 #custom-network,
 #custom-agents {
   min-width: 0;
   padding: 0 10px;
+  color: #ffffff;
+}
+
+#custom-status-expander {
+  padding-left: 7px;
+  padding-right: 7px;
+  color: #999999;
+}
+
+#group-hidden-status:hover #custom-status-expander {
+  background: #686868;
   color: #ffffff;
 }
 
