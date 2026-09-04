@@ -1,0 +1,38 @@
+# Compact swaybar-inspired notification style.
+font=JetBrainsMono Nerd Font 12
+background-color=#323232f5
+text-color=#ffffffff
+border-color=#5c5c5cff
+border-size=1
+border-radius=0
+progress-color=over #285577ff
+
+anchor=top-right
+layer=overlay
+width=360
+height=120
+margin=6
+outer-margin=8
+padding=10
+max-visible=5
+group-by=app-name
+
+icons=1
+icon-location=left
+max-icon-size=40
+markup=1
+actions=1
+format=<b>%s</b>\n%b
+
+default-timeout=7000
+ignore-timeout=0
+
+on-button-left=invoke-default-action
+on-button-right=dismiss
+
+[urgency=low]
+default-timeout=4000
+
+[urgency=critical]
+border-color=#900000ff
+default-timeout=0

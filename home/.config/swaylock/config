@@ -1,0 +1,25 @@
+color=323232
+image=/home/dimitar/Pictures/Wallpapers/misty-sakura-pavilion-lock.png
+scaling=fill
+font=JetBrainsMono Nerd Font
+font-size=18
+show-failed-attempts
+show-keyboard-layout
+indicator-radius=75
+indicator-thickness=6
+inside-color=323232ee
+ring-color=5c5c5cff
+key-hl-color=285577ff
+bs-hl-color=900000ff
+line-color=00000000
+separator-color=00000000
+text-color=ffffffff
+inside-ver-color=323232ee
+ring-ver-color=4c7899ff
+text-ver-color=ffffffff
+inside-wrong-color=323232ee
+ring-wrong-color=900000ff
+text-wrong-color=ffffffff
+layout-bg-color=323232ee
+layout-border-color=5c5c5cff
+layout-text-color=ffffffff

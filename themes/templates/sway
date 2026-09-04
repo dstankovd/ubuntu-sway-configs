@@ -1,7 +1,0 @@
-font pango:Cascadia Mono 10
-
-# client.<state>  <border>      <background>  <text>       <indicator>   <child_border>
-client.focused          #${ACCENT}  #${BASE}  #${TEXT}   #${ACCENT}  #${ACCENT}
-client.focused_inactive #${OVERLAY} #${BASE}  #${MUTED}  #${OVERLAY} #${OVERLAY}
-client.unfocused        #${SURFACE} #${BASE}  #${MUTED}  #${SURFACE} #${SURFACE}
-client.urgent           #${RED}     #${BASE}  #${TEXT}   #${RED}     #${RED}

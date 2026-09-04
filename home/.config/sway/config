@@ -1,0 +1,109 @@
+# Keep Ubuntu's packaged defaults as the base configuration.
+include /etc/sway/config
+
+# Make Wayland session details available to portals and user services.
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP
+
+# Desktop background.
+output * bg /home/dimitar/Pictures/Wallpapers/misty-sakura-pavilion.png fill
+
+# Laptop input preferences.
+input type:touchpad {
+    tap enabled
+    natural_scroll enabled
+}
+
+input type:keyboard {
+    xkb_layout "us,bg"
+    xkb_variant ",phonetic"
+    xkb_options "grp:alt_shift_toggle"
+}
+
+# Minimal centered application launcher.
+set $menu fuzzel
+unbindsym $mod+d
+bindsym $mod+d exec $menu
+
+# Cycle containers; in tabbed layouts these move between tabs.
+bindsym Mod1+Tab focus next
+bindsym Mod1+Shift+Tab focus prev
+
+# The packaged defaults use pactl, while this system uses PipeWire/WirePlumber.
+unbindsym --locked XF86AudioMute
+unbindsym --locked XF86AudioLowerVolume
+unbindsym --locked XF86AudioRaiseVolume
+unbindsym --locked XF86AudioMicMute
+bindsym --locked XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+bindsym --locked XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+bindsym --locked XF86AudioRaiseVolume exec wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+
+bindsym --locked XF86AudioMicMute exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+unbindsym --locked XF86MonBrightnessDown
+unbindsym --locked XF86MonBrightnessUp
+bindsym --locked XF86MonBrightnessDown exec /home/dimitar/.config/sway/brightness-osd down
+bindsym --locked XF86MonBrightnessUp exec /home/dimitar/.config/sway/brightness-osd up
+
+# Lock and suspend controls.
+unbindsym $mod+l
+bindsym $mod+l exec swaylock -f
+bindsym $mod+Shift+s exec /home/dimitar/.config/sway/suspend
+bindsym --locked XF86Sleep exec /home/dimitar/.config/sway/suspend
+bindsym $mod+Escape exec /home/dimitar/.config/modals/power/menu.py
+bindsym $mod+slash exec /home/dimitar/.config/modals/keybinds/cheatsheet.py
+bindsym $mod+Shift+o exec /home/dimitar/.config/modals/openvpn/manager.py
+bindsym $mod+Shift+w exec /home/dimitar/.config/modals/network/manager.py
+bindsym $mod+Shift+a exec /home/dimitar/.config/modals/agents/panel.py
+bindsym $mod+Shift+b exec /home/dimitar/.config/modals/bluetooth/manager.py
+bindsym $mod+Shift+m exec /home/dimitar/.config/modals/audio/manager.py
+
+# Integrated capture selector: region, focused window, or current output.
+unbindsym Print
+bindsym Print exec /home/dimitar/.config/modals/screenshots/menu.py
+
+# Keep tiled windows titlebar-free, with a subtle focused-window outline.
+# Floating dialogs retain their normal decoration so they are easy to move.
+default_border pixel 1
+default_floating_border normal
+client.focused          #5c5c5c #323232 #ffffff #5c5c5c #5c5c5c
+client.focused_inactive #3a3a3a #323232 #888888 #3a3a3a #3a3a3a
+client.unfocused        #2b2b2b #323232 #888888 #2b2b2b #2b2b2b
+
+# Center the battery menu and keep it above tiled windows on every workspace.
+for_window [app_id="local.waybar.PowerProfileSelector"] floating enable, sticky enable, border none, resize set width 390 height 210, move position center, focus
+exec --no-startup-id /home/dimitar/.config/modals/power/profile-selector.py --daemon
+for_window [app_id="local.waybar.PowerMenu"] floating enable, sticky enable, border none, resize set width 390 height 245, move position center, focus
+exec --no-startup-id /home/dimitar/.config/modals/power/menu.py --daemon
+for_window [app_id="local.sway.ScreenshotMenu"] floating enable, sticky enable, border none, resize set width 390 height 210, move position center, focus
+exec --no-startup-id /home/dimitar/.config/modals/screenshots/menu.py --daemon
+for_window [app_id="local.sway.KeybindCheatsheet"] floating enable, sticky enable, border none, resize set width 620 height 570, move position center, focus
+exec --no-startup-id /home/dimitar/.config/modals/keybinds/cheatsheet.py --daemon
+for_window [app_id="local.sway.OpenVpnManager"] floating enable, sticky enable, border none, resize set width 510 height 430, move position center, focus
+exec --no-startup-id /home/dimitar/.config/modals/openvpn/manager.py --daemon
+for_window [app_id="local.sway.WifiManager"] floating enable, sticky enable, border none, resize set width 510 height 500, move position center, focus
+exec --no-startup-id /home/dimitar/.config/modals/network/manager.py --daemon
+for_window [app_id="local.sway.AgentsPanel"] floating enable, sticky enable, border none, resize set width 480 height 500, move position center, focus
+exec --no-startup-id /home/dimitar/.config/modals/agents/panel.py --daemon
+for_window [app_id="local.sway.BluetoothManager"] floating enable, sticky enable, border none, resize set width 500 height 480, move position center, focus
+exec --no-startup-id /home/dimitar/.config/modals/bluetooth/manager.py --daemon
+for_window [app_id="local.sway.AudioManager"] floating enable, sticky enable, border none, resize set width 480 height 410, move position center, focus
+exec --no-startup-id /home/dimitar/.config/modals/audio/manager.py --daemon
+
+# Notifications: dismiss newest, restore most recent, or clear all.
+exec mako
+# Encrypted Secret Service storage for VS Code, Chrome, and other applications.
+exec --no-startup-id gnome-keyring-daemon --start --components=secrets
+# Graphical administrator-password prompts for this minimal Sway session.
+exec --no-startup-id /usr/libexec/polkit-mate-authentication-agent-1
+exec --no-startup-id easyeffects --service-mode
+exec --no-startup-id /home/dimitar/.local/bin/sway-audio-idle-inhibit
+# Session helpers: Bluetooth pairing agent and removable-drive automounting.
+exec --no-startup-id systemctl --user start sway-session.target
+bindsym $mod+n exec makoctl dismiss
+bindsym $mod+Shift+n exec makoctl restore
+bindsym $mod+Ctrl+n exec makoctl dismiss --all
+
+exec swayidle -w -C /home/dimitar/.config/swayidle/config
+
+# Replace the built-in swaybar (bar-0 from the packaged config) with Waybar.
+bar bar-0 {
+    swaybar_command waybar
+}

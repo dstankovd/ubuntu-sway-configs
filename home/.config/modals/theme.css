@@ -1,0 +1,19 @@
+@define-color modal_bg #323232;
+@define-color modal_bg_deep #282828;
+@define-color modal_hover #686868;
+@define-color modal_selected #285577;
+@define-color modal_focus #4c7899;
+@define-color modal_fg #d0d0d0;
+@define-color modal_fg_bright #ffffff;
+@define-color modal_fg_dim #999999;
+@define-color modal_border #5c5c5c;
+@define-color modal_warning #d8c27a;
+@define-color modal_error #ff8d8d;
+@define-color modal_success #ffffff;
+
+window { background: @modal_bg; color: @modal_fg; }
+entry { background: @modal_bg_deep; color: @modal_fg_bright; border-color: @modal_border; }
+entry:focus { border-color: @modal_focus; }
+button { background: @modal_hover; color: @modal_fg; border-color: @modal_border; }
+button:hover { background: @modal_selected; color: @modal_fg_bright; }
+selection { background: @modal_selected; color: @modal_fg_bright; }

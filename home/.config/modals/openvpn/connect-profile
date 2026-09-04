@@ -1,0 +1,63 @@
+#!/bin/bash
+set -o pipefail
+
+profile_uuid=${1:-}
+if [[ ! "$profile_uuid" =~ ^[0-9a-fA-F-]{36}$ ]]; then
+  echo "Invalid VPN profile UUID." >&2
+  exit 2
+fi
+
+profile_type=$(nmcli -g connection.type connection show uuid "$profile_uuid" 2>/dev/null)
+[[ "$profile_type" == "vpn" ]] || { echo "The selected connection is not a VPN profile." >&2; exit 2; }
+
+IFS= read -r vpn_username
+IFS= read -r vpn_password
+vpn_conn_type=$(nmcli -g vpn.data connection show uuid "$profile_uuid" 2>/dev/null \
+  | tr ',' '\n' | sed -n 's/^[[:space:]]*connection-type[[:space:]]*=[[:space:]]*//p' | head -1)
+
+cert_only=0
+if [[ -z "$vpn_username" && -z "$vpn_password" && "$vpn_conn_type" == "tls" ]]; then
+  cert_only=1
+elif [[ -z "$vpn_username" || -z "$vpn_password" ]]; then
+  echo "Username and password are required." >&2
+  exit 2
+fi
+
+if (( cert_only == 0 )); then
+  nmcli connection modify uuid "$profile_uuid" vpn.user-name "$vpn_username" || exit $?
+fi
+unset vpn_username
+
+while IFS=: read -r active_uuid active_type; do
+  if [[ "$active_type" == "vpn" && "$active_uuid" != "$profile_uuid" ]]; then
+    nmcli connection down uuid "$active_uuid" >/dev/null || {
+      echo "Could not disconnect the active VPN session." >&2
+      exit 3
+    }
+  fi
+done < <(nmcli --terse --fields UUID,TYPE connection show --active)
+
+if (( cert_only == 1 )); then
+  timeout --signal=TERM 25s nmcli --wait 20 connection up uuid "$profile_uuid"
+else
+  printf 'vpn.secrets.password:%s\n' "$vpn_password" \
+    | timeout --signal=TERM 25s nmcli --wait 20 connection up uuid "$profile_uuid" passwd-file /dev/stdin
+fi
+connection_status=$?
+unset vpn_password
+
+if (( connection_status != 0 )); then
+  (( connection_status == 124 )) && echo "Connection attempt timed out." >&2
+  exit "$connection_status"
+fi
+
+for ((attempt = 0; attempt < 20; attempt++)); do
+  connection_state=$(nmcli -g GENERAL.STATE connection show uuid "$profile_uuid" 2>/dev/null)
+  case "$connection_state" in
+    activated*) exit 0 ;;
+    activating*) sleep 0.5 ;;
+    *) echo "Authentication failed or the VPN was rejected." >&2; exit 4 ;;
+  esac
+done
+echo "Timed out waiting for the VPN connection." >&2
+exit 5

@@ -1,0 +1,10 @@
+[Unit]
+Description=Automount removable drives
+PartOf=sway-session.target
+After=graphical-session-pre.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/udiskie --automount --notify --no-tray --file-manager /usr/bin/nautilus
+Restart=on-failure
+RestartSec=2

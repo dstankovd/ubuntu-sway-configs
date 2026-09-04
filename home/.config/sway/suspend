@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# swaylock --daemonize returns only after the lock surface is established.
+swaylock -f || exit 1
+systemctl suspend

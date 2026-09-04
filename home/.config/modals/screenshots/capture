@@ -1,0 +1,37 @@
+#!/bin/sh
+
+runtime_dir=${XDG_RUNTIME_DIR:-/tmp}
+shot=$(mktemp "${runtime_dir}/sway-screenshot-XXXXXX.png") || exit 1
+trap 'rm -f "$shot"' EXIT INT TERM
+
+# Give the selector one frame to disappear and restore the previous focus.
+sleep 0.15
+
+case "$1" in
+    region)
+        geometry=$(slurp \
+            -b 32323288 -c 4c7899ff -s 28557755 -w 2 \
+            -F "JetBrainsMono Nerd Font") || exit 0
+        [ -n "$geometry" ] || exit 0
+        grim -g "$geometry" "$shot" || exit 1
+        ;;
+    window)
+        geometry=$(swaymsg -t get_tree -r | jq -r '
+            .. | objects |
+            select((.type? == "con" or .type? == "floating_con") and .focused == true) |
+            .rect | "\(.x),\(.y) \(.width)x\(.height)"
+        ' | head -n 1)
+        [ -n "$geometry" ] || exit 1
+        grim -g "$geometry" "$shot" || exit 1
+        ;;
+    screen)
+        output=$(swaymsg -t get_outputs -r | jq -r '.[] | select(.focused) | .name')
+        [ -n "$output" ] || exit 1
+        grim -o "$output" "$shot" || exit 1
+        ;;
+    *)
+        exit 2
+        ;;
+esac
+
+swappy -f "$shot"

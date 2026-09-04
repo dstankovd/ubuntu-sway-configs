@@ -1,8 +1,0 @@
-### Output configuration
-# Get output names: swaymsg -t get_outputs
-
-output * bg ~/.config/wallpapers/mount-fuji.jpg fill
-
-# Example:
-#   output HDMI-A-1 resolution 1920x1080 position 1920,0
-#   output eDP-1 resolution 1920x1080 scale 1.5

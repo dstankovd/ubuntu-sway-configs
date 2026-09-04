@@ -1,0 +1,147 @@
+* {
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+  font-family: "JetBrainsMono Nerd Font", "Font Awesome 6 Free", monospace;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+window#waybar {
+  background: #323232;
+  color: #ffffff;
+}
+
+#custom-power {
+  min-width: 20px;
+  padding: 0 3px;
+  color: #ffffff;
+}
+
+#custom-power:hover {
+  background: #686868;
+}
+
+#workspaces button {
+  min-width: 18px;
+  padding: 0 1px;
+  border: 2px solid transparent;
+  background: transparent;
+  color: #5c5c5c;
+}
+
+#workspaces button:hover {
+  border-color: #5f676a;
+  background: #686868;
+  box-shadow: none;
+  color: #ffffff;
+}
+
+#workspaces button.visible {
+  border-color: #333333;
+  background: #5f676a;
+  color: #ffffff;
+}
+
+#workspaces button.focused {
+  border-color: #4c7899;
+  background: #285577;
+  color: #ffffff;
+}
+
+#workspaces button.urgent {
+  border-color: #2f343a;
+  background: #900000;
+  color: #ffffff;
+}
+
+#clock {
+  padding: 0 8px;
+  color: #ffffff;
+}
+
+#battery,
+#pulseaudio,
+#cpu,
+#memory,
+#disk,
+#language,
+#custom-bluetooth,
+#custom-openvpn,
+#custom-network,
+#custom-agents {
+  min-width: 0;
+  padding: 0 10px;
+  color: #ffffff;
+}
+
+#custom-agents.warning {
+  color: #d8c27a;
+}
+
+#custom-agents.critical {
+  background: #900000;
+  color: #ffffff;
+}
+
+#custom-agents.unavailable {
+  color: #777777;
+}
+
+#custom-agents:hover {
+  background: #686868;
+  color: #ffffff;
+}
+
+#custom-openvpn.disconnected,
+#custom-openvpn.unavailable {
+  color: #777777;
+}
+
+#custom-openvpn.connecting {
+  color: #d8c27a;
+}
+
+#custom-openvpn:hover {
+  background: #686868;
+  color: #ffffff;
+}
+
+#custom-network.disconnected,
+#custom-network.unavailable {
+  color: #777777;
+}
+
+#custom-network.limited {
+  color: #d8c27a;
+}
+
+#custom-network:hover {
+  background: #686868;
+  color: #ffffff;
+}
+
+#custom-bluetooth.off,
+#custom-bluetooth.unavailable {
+  color: #777777;
+}
+
+#custom-bluetooth:hover,
+#pulseaudio:hover {
+  background: #686868;
+  color: #ffffff;
+}
+
+#battery.charging,
+#battery.plugged {
+  color: #ffffff;
+}
+
+#battery.warning:not(.charging) {
+  color: #ffff00;
+}
+
+#battery.critical:not(.charging) {
+  background: #900000;
+  color: #ffffff;
+}

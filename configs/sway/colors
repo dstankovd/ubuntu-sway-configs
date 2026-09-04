@@ -1,7 +1,0 @@
-font pango:Cascadia Mono 10
-
-# client.<state>  <border>      <background>  <text>       <indicator>   <child_border>
-client.focused          #AD8301  #1C1B1A  #CECDC3   #AD8301  #AD8301
-client.focused_inactive #343331 #1C1B1A  #575653  #343331 #343331
-client.unfocused        #282726 #1C1B1A  #575653  #282726 #282726
-client.urgent           #AF3029     #1C1B1A  #CECDC3   #AF3029     #AF3029
