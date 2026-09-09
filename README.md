@@ -22,7 +22,7 @@ the relevant paths below `$HOME`.
 ```text
 home/
 ├── .config/                 # Sway, Waybar, applications, modals, and services
-├── .local/share/easyeffects # Laptop speaker preset
+├── .local/share/easyeffects # ThinkPad presets and speaker-correction impulses
 └── Pictures/Wallpapers      # Desktop and blurred lock-screen images
 ```
 
@@ -52,13 +52,31 @@ Also required:
 
 ## Restore
 
-Review the files first, then copy the tracked home tree into place:
+Review the files first, then symlink the managed configuration into place:
 
 ```bash
-cp -a home/. "$HOME/"
+python3 install.py --dry-run
+python3 install.py
 systemctl --user daemon-reload
 swaymsg reload
 ```
+
+The installer backs up replaced paths under
+`~/.local/state/ubuntu-sway-configs/backups/` and is safe to rerun. Keep this
+checkout in place: the live configuration points into it. Application directories
+are linked as directories so edits and atomic saves appear in `git diff`.
+Shared directories use individual file links to avoid taking over unrelated files.
+EasyEffects saves its current settings in the linked `home/.config/easyeffects/`
+directory, so changing effects or window settings can also modify the working tree.
+
+The ThinkPad T14s Gen 2 Intel presets were generated from the matching Lenovo
+ALC257 tuning (`17AA:22D1`) using
+[speaker-tuning-to-easyeffects](https://github.com/antoinecellerier/speaker-tuning-to-easyeffects).
+Warm is selected. Sway starts EasyEffects in service mode at login.
+The original IdeaPad preset remains available for comparison.
+
+The brightness helper uses logind's active-session backlight API; it does not
+require direct sysfs write access or membership in the `video` group.
 
 No secrets are stored in this repository. Wi-Fi and OpenVPN profiles remain
 managed by NetworkManager on the local machine.

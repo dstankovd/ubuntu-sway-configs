@@ -1,13 +1,31 @@
 #!/bin/sh
 
+device=intel_backlight
+backlight=/sys/class/backlight/$device
+current=$(cat "$backlight/brightness") || exit 1
+maximum=$(cat "$backlight/max_brightness") || exit 1
+step=$(( (maximum + 5) / 10 ))
+minimum=$(( (maximum + 99) / 100 ))
+
 case "$1" in
-    up)   brightnessctl set 10%+ >/dev/null ;;
-    down) brightnessctl set 10%- >/dev/null ;;
+    up)   target=$((current + step)) ;;
+    down) target=$((current - step)) ;;
     *)    exit 2 ;;
 esac
+[ "$target" -ge "$minimum" ] || target=$minimum
+[ "$target" -le "$maximum" ] || target=$maximum
+
+# logind authorizes the active local session without direct sysfs permissions.
+if ! busctl --system call org.freedesktop.login1 \
+    /org/freedesktop/login1/session/auto org.freedesktop.login1.Session \
+    SetBrightness ssu backlight "$device" "$target"; then
+    notify-send --app-name="Brightness" --urgency=critical \
+        "Brightness" "Could not change the display brightness"
+    exit 1
+fi
 
 # Machine-readable output is: device,class,current,percentage,max.
-percent=$(brightnessctl -m | awk -F, 'NR == 1 { gsub(/%/, "", $4); print $4 }')
+percent=$(brightnessctl -d "$device" -m | awk -F, 'NR == 1 { gsub(/%/, "", $4); print $4 }')
 
 notify-send \
     --app-name="Brightness" \
